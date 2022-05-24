@@ -69,12 +69,31 @@ def coin_toss_choice():
 def coin_toss_outcome():
     """
     Calculates who won the coin toss and prints a message for each
-    result.
+    result. If the user wins the coin toss, requests a choice of
+    noughts or crosses.
     """
     if capitalize_choice == coin_toss_result:
         print("You win- lucky guess...")
+        sign_choice = input("Noughts or Crosses?")
+        capitalize_sign = sign_choice.capitalize()
+        if capitalize_sign == "Noughts":
+            print("You chose Noughts")
+        elif capitalize_sign == "Crosses":
+            print("You chose Crosses")
+        else:
+            print("You must choose 'Noughts' or 'Crosses'. Let's try again.")
     else:
         print("I win- binary is best!")
+        computer_choice = round(random.randint(0, 1))
+        if computer_choice == 0:
+            computer_selection = "Noughts"
+            print(f"I think I'll pick {computer_selection}")
+        elif computer_choice == 1:
+            computer_selection = "Crosses"
+            print(f"I'm going to pick {computer_selection}")
+        else:
+            print("Uh oh! Error!")
+            coin_toss_outcome()
     
 
 def new_game():
@@ -82,6 +101,3 @@ def new_game():
     coin_toss_choice()
     coin_toss()
     coin_toss_outcome()
-
-
-new_game()
