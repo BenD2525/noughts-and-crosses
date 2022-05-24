@@ -22,13 +22,22 @@ def welcome_message():
     time.sleep(num_seconds)
 
 
+def random_number():
+    """
+    Generates a random number (0 or 1) that is used to apply
+    to other sections.
+    """
+    result = round(random.randint(0, 1))
+    return result
+
+
 def coin_toss():
     """
     Calculates a random number, 1 or 0, then assigns a 'heads'
     or 'tails' result based on the result. Prints a message to
     advise the user of the result.
     """
-    result = round(random.randint(0, 1))
+    result = random_number()
     if result == 0:
         coin_toss_result = "Heads"
         print("The computer flicks the coin up...")
@@ -43,7 +52,8 @@ def coin_toss():
         print(f"It's {coin_toss_result}")
     else:
         print("There's a glitch in the matrix, let's try again.")
-
+    return coin_toss_result
+    
 
 def coin_toss_choice():
     """
@@ -52,18 +62,16 @@ def coin_toss_choice():
     Uses a random choice to select heads or tails, records result
     and displays a win or loss message
     """
-    choice = input("Now, let's see who goes first. Heads or Tails? ")
+    choice = input("Now, let's see who goes first. Heads or Tails? \n")
     capitalize_choice = choice.capitalize()
     if capitalize_choice == "Heads":
         print("Heads it is")
-        coin_toss()
     elif capitalize_choice == "Tails":
         print("Tails it is")
-        coin_toss()
     else:
         print("You need to choose 'Heads' or 'Tails'. Let's try again.")
         coin_toss_choice()   
-    print(capitalize_choice)
+    return capitalize_choice
 
 
 def coin_toss_outcome():
@@ -72,9 +80,11 @@ def coin_toss_outcome():
     result. If the user wins the coin toss, requests a choice of
     noughts or crosses.
     """
+    capitalize_choice = coin_toss_choice()
+    coin_toss_result = coin_toss()
     if capitalize_choice == coin_toss_result:
         print("You win- lucky guess...")
-        sign_choice = input("Noughts or Crosses?")
+        sign_choice = input("Noughts or Crosses? \n")
         capitalize_sign = sign_choice.capitalize()
         if capitalize_sign == "Noughts":
             print("You chose Noughts")
@@ -82,9 +92,11 @@ def coin_toss_outcome():
             print("You chose Crosses")
         else:
             print("You must choose 'Noughts' or 'Crosses'. Let's try again.")
+            sign_choice = input("Noughts or Crosses? \n")
+            capitalize_sign = sign_choice.capitalize()
     else:
         print("I win- binary is best!")
-        computer_choice = round(random.randint(0, 1))
+        computer_choice = random_number()
         if computer_choice == 0:
             computer_selection = "Noughts"
             print(f"I think I'll pick {computer_selection}")
@@ -94,10 +106,14 @@ def coin_toss_outcome():
         else:
             print("Uh oh! Error!")
             coin_toss_outcome()
-    
+  
 
 def new_game():
     welcome_message()
     coin_toss_choice()
-    coin_toss()
-    coin_toss_outcome()
+#   coin_toss()
+#   coin_toss_outcome()
+
+
+coin_toss_outcome()
+
