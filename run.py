@@ -53,7 +53,7 @@ def coin_toss():
     else:
         print("There's a glitch in the matrix, let's try again.")
     return coin_toss_result
-    
+  
 
 def coin_toss_choice():
     """
@@ -114,13 +114,33 @@ grid = [
         [chosen_slots[3], chosen_slots[4], chosen_slots[5]],
         [chosen_slots[6], chosen_slots[7], chosen_slots[8]]
     ]
-    
+   
 
 def print_grid(grid):
+    """
+    Prints grid using the chosen_slots list.
+    """
     for row in grid:
         for slot in row:
             print("|"f"{slot}", end="|")
         print()
+
+
+def user_turn():
+    """
+    Asks for user input for turn being taken. If a number greater than 9
+    is input then error message is printed. Updates chosen_slots array
+    and grid with player choice.
+    """
+    user_input = input("Make your move.. Choose between slots 1-9\n")
+    player_choice = int(user_input)
+    if player_choice <= 9 and player_choice != 0:
+        chosen_slots.remove(player_choice)
+        chosen_slots.insert(player_choice, "x")
+        print_grid(grid)
+    else:
+        print("Please select a number between 1 and 9.")
+        user_turn()
 
 
 def new_game():
@@ -128,4 +148,4 @@ def new_game():
     coin_toss_outcome()
 
 
-print_grid(grid)
+user_turn()
