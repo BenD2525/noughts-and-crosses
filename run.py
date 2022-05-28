@@ -106,14 +106,26 @@ def coin_toss_outcome():
         else:
             print("Uh oh! Error!")
             coin_toss_outcome()
-  
+
+
+chosen_slots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+grid = [
+        [chosen_slots[0], chosen_slots[1], chosen_slots[2]],
+        [chosen_slots[3], chosen_slots[4], chosen_slots[5]],
+        [chosen_slots[6], chosen_slots[7], chosen_slots[8]]
+    ]
+    
+
+def print_grid(grid):
+    for row in grid:
+        for slot in row:
+            print("|"f"{slot}", end="|")
+        print()
+
 
 def new_game():
     welcome_message()
-    coin_toss_choice()
-#   coin_toss()
-#   coin_toss_outcome()
+    coin_toss_outcome()
 
 
-coin_toss_outcome()
-
+print_grid(grid)
