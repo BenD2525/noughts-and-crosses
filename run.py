@@ -178,6 +178,25 @@ def computer_turn():
     print_grid(grid)
   
 
+def access_data():
+    """
+    Accesses the 'Analysis' tab in spreadsheet and prints
+    detail to user.
+    """
+    Analysis = SHEET.worksheet('Analysis')
+
+    request = input("What stats would you like to see?\n")
+    capitalize_request = request.capitalize()
+    if capitalize_request == "General":
+        general = Analysis.col_values(1 + 2)
+        print("Okay, let's have a look!")
+        print(f"Here we go:\n {general}")
+    elif capitalize_request == "Choices":
+        choices = Analysis.col_values(3 + 4)
+        print("Interested in your choices? Let me see!")
+        print(f"Here we go:\n {choices}")
+       
+
 def new_game():
     """
     Initiates the game and contains other functions.
@@ -188,4 +207,4 @@ def new_game():
     computer_turn()
 
 
-new_game()
+access_data()
