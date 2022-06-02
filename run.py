@@ -15,8 +15,7 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('Noughts and Crosses')
 
 results = SHEET.worksheet('Results')
-
-data = results.get_all_values()
+next_free_row = len(results.get_all_values()) + 1
 
 
 def welcome_message():
@@ -37,6 +36,7 @@ def welcome_message():
     time.sleep(num_seconds)
     print("Nice to know the name of the person I'll beat!")
     time.sleep(num_seconds)
+    results.update('A' + str(next_free_row), username)
 
 
 def random_number():
@@ -181,3 +181,4 @@ def new_game():
     coin_toss_outcome()
 
 
+welcome_message()
