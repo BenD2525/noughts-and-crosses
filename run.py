@@ -136,16 +136,32 @@ def user_turn():
     player_choice = int(user_input)
     if player_choice <= 9 and player_choice != 0:
         chosen_slots.remove(player_choice)
-        chosen_slots.insert(player_choice, "x")
+        chosen_slots.insert(player_choice - 1, "x")
+        print(chosen_slots)
         print_grid(grid)
     else:
         print("Please select a number between 1 and 9.")
         user_turn()
 
 
+def computer_turn():
+    """
+    Uses a random number to generate a random choice for the computer.
+    """
+    computer_choice = round(random.randint(1, 9))
+    print("My go- I think I'll go here...")
+    chosen_slots.remove(computer_choice)
+    chosen_slots.insert(computer_choice - 1, "x")
+    print(chosen_slots)
+    print_grid(grid)
+  
+
 def new_game():
+    """
+    Initiates the game and contains other functions.
+    """
     welcome_message()
     coin_toss_outcome()
 
 
-user_turn()
+computer_turn()
