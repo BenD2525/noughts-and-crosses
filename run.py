@@ -17,6 +17,13 @@ SHEET = GSPREAD_CLIENT.open('Noughts and Crosses')
 results = SHEET.worksheet('Results')
 next_free_row = len(results.get_all_values()) + 1
 
+chosen_slots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+grid = [
+        [chosen_slots[0], chosen_slots[1], chosen_slots[2]],
+        [chosen_slots[3], chosen_slots[4], chosen_slots[5]],
+        [chosen_slots[6], chosen_slots[7], chosen_slots[8]]
+    ]
+
 
 def welcome_message():
     """
@@ -83,8 +90,10 @@ def coin_toss_choice():
     capitalize_choice = choice.capitalize()
     if capitalize_choice == "Heads":
         print("Heads it is")
+        results.update('B' + str(next_free_row), capitalize_choice)
     elif capitalize_choice == "Tails":
         print("Tails it is")
+        results.update('B' + str(next_free_row), capitalize_choice)
     else:
         print("You need to choose 'Heads' or 'Tails'. Let's try again.")
         coin_toss_choice()   
@@ -103,6 +112,8 @@ def coin_toss_outcome():
         print("You win- lucky guess...")
         sign_choice = input("Noughts or Crosses? \n")
         capitalize_sign = sign_choice.capitalize()
+        results.update('C' + str(next_free_row), coin_toss_result)
+        results.update('D' + str(next_free_row), capitalize_sign)
         if capitalize_sign == "Noughts":
             print("You chose Noughts")
         elif capitalize_sign == "Crosses":
@@ -114,6 +125,8 @@ def coin_toss_outcome():
     else:
         print("I win- binary is best!")
         computer_choice = random_number()
+        results.update('C' + str(next_free_row), coin_toss_result)
+        results.update('D' + str(next_free_row), "-")
         if computer_choice == 0:
             computer_selection = "Noughts"
             print(f"I think I'll pick {computer_selection}")
@@ -123,14 +136,6 @@ def coin_toss_outcome():
         else:
             print("Uh oh! Error!")
             coin_toss_outcome()
-
-
-chosen_slots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-grid = [
-        [chosen_slots[0], chosen_slots[1], chosen_slots[2]],
-        [chosen_slots[3], chosen_slots[4], chosen_slots[5]],
-        [chosen_slots[6], chosen_slots[7], chosen_slots[8]]
-    ]
    
 
 def print_grid(grid):
@@ -179,6 +184,8 @@ def new_game():
     """
     welcome_message()
     coin_toss_outcome()
+    user_turn()
+    computer_turn()
 
 
-welcome_message()
+new_game()
