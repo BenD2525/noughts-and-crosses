@@ -23,6 +23,7 @@ grid = [
         [chosen_slots[3], chosen_slots[4], chosen_slots[5]],
         [chosen_slots[6], chosen_slots[7], chosen_slots[8]]
     ]
+grid_positions = {'Player': [], 'Computer': []}
 
 
 def welcome_message():
@@ -148,6 +149,13 @@ def print_grid(grid):
         print()
 
 
+def check_choice():
+    """
+    Checks whether user choice for placement is already
+    taken or not.
+    """
+
+
 def user_turn():
     """
     Asks for user input for turn being taken. If a number greater than 9
@@ -156,14 +164,20 @@ def user_turn():
     """
     user_input = input("Make your move.. Choose between slots 1-9\n")
     player_choice = int(user_input)
-    if player_choice <= 9 and player_choice != 0:
-        chosen_slots.remove(player_choice)
-        chosen_slots.insert(player_choice - 1, "x")
-        print(chosen_slots)
-        print_grid(grid)
-    else:
-        print("Please select a number between 1 and 9.")
-        user_turn()
+    try:
+        if player_choice <= 9 and player_choice != 0:
+            chosen_slots.remove(player_choice)
+            chosen_slots.insert(player_choice - 1, "x")
+            grid_positions['Player'].append(player_choice)
+            print(chosen_slots)
+            print_grid(grid)
+            print(grid_positions)
+            user_turn()
+        else:
+            print("Please select a number between 1 and 9.")
+            user_turn()
+    except ValueError:
+        print("You need to choose a real number!")
 
 
 def computer_turn():
@@ -240,4 +254,4 @@ def new_game():
     computer_turn()
 
 
-access_data()
+user_turn()
