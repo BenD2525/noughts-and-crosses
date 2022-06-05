@@ -183,18 +183,51 @@ def access_data():
     Accesses the 'Analysis' tab in spreadsheet and prints
     detail to user.
     """
+    print("Accessing database...")
+    print("Bear with me!")
     Analysis = SHEET.worksheet('Analysis')
+    total_games = Analysis.get('D5').first()
+    user_wins = Analysis.get('D6').first()
+    computer_wins = Analysis.get('D7').first()
+    user_percentage = Analysis.get('D8').first()
+    computer_percentage = Analysis.get('D9').first()
+    heads_choice = Analysis.get('G5').first()
+    tails_choice = Analysis.get('G6').first()
+    heads_choice_percentage = Analysis.get('G7').first()
+    tails_choice_percentage = Analysis.get('G8').first()
+    heads_outcome = Analysis.get('J5').first()
+    tails_outcome = Analysis.get('J6').first()
+    heads_outcome_percentage = Analysis.get('J7').first()
+    tails_outcome_percentage = Analysis.get('J8').first()
 
-    request = input("What stats would you like to see?\n")
+    print("You have 3 choices: Games, Choices or Cancel")
+    request = input("What stats would you like to see?\n") 
     capitalize_request = request.capitalize()
-    if capitalize_request == "General":
-        general = Analysis.col_values(1 + 2)
+    if capitalize_request == "Games":
         print("Okay, let's have a look!")
-        print(f"Here we go:\n {general}")
+        print(f"You've played {total_games} games.")
+        print(f"You've won {user_wins} times.")
+        print(f"I've won {computer_wins} times.")
+        print(f"You've got a {user_percentage}% win percentage.")
+        print(f"I've got a {computer_percentage}% win percentage.")
     elif capitalize_request == "Choices":
-        choices = Analysis.col_values(3 + 4)
         print("Interested in your choices? Let me see!")
-        print(f"Here we go:\n {choices}")
+        print("Here we go:")
+        print(f"You've chosen heads {heads_choice} times.")
+        print(f"This is {heads_choice_percentage}% of the time.")
+        print(f"You've chosen tails {tails_choice} times.")
+        print(f"This is {tails_choice_percentage}% of the time.")
+        print(f"The coin landed on heads {heads_outcome} times.")
+        print(f"This is {heads_outcome_percentage}% of the time.")
+        print(f"The coin landed on tails {tails_outcome} times.")
+        print(f"This is {tails_outcome_percentage}% of the time.")
+    elif capitalize_request == "Cancel":
+        print("Okay")
+        return
+    user_choice = input("Anything else? Yes or No:\n")
+    capitalize_choice = user_choice.capitalize()
+    if capitalize_choice == "Yes":
+        access_data()
        
 
 def new_game():
