@@ -16,6 +16,20 @@ SHEET = GSPREAD_CLIENT.open('Noughts and Crosses')
 
 results = SHEET.worksheet('Results')
 next_free_row = len(results.get_all_values()) + 1
+Analysis = SHEET.worksheet('Analysis')
+total_games = Analysis.get('D5').first()
+user_wins = Analysis.get('D6').first()
+computer_wins = Analysis.get('D7').first()
+user_percentage = Analysis.get('D8').first()
+computer_percentage = Analysis.get('D9').first()
+heads_choice = Analysis.get('G5').first()
+tails_choice = Analysis.get('G6').first()
+heads_choice_percentage = Analysis.get('G7').first()
+tails_choice_percentage = Analysis.get('G8').first()
+heads_outcome = Analysis.get('J5').first()
+tails_outcome = Analysis.get('J6').first()
+heads_outcome_percentage = Analysis.get('J7').first()
+tails_outcome_percentage = Analysis.get('J8').first()
 
 chosen_slots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 grid = [
@@ -24,6 +38,17 @@ grid = [
         [chosen_slots[6], chosen_slots[7], chosen_slots[8]]
     ]
 grid_positions = {'Player': [], 'Computer': []}
+
+winning_combinations = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+    [1, 4, 7],
+    [2, 5, 8],
+    [3, 6, 9],
+    [1, 5, 9],
+    [3, 5, 7]
+]
 
 
 def welcome_message():
@@ -208,6 +233,46 @@ def check_computer_choice(computer_choice, computer_sign, player_sign):
         computer_turn(computer_sign, player_sign)
 
 
+def check_if_win():
+    """
+    Checks if the user or the computer has won,
+    if they have, it stops the game and displays a message.
+    If not, continues the game.
+    """
+    player_stats = grid_positions.get('Player')
+    computer_stats = grid_positions.get('Computer')
+    for combo in winning_combinations:
+        if player_stats == combo:
+            print("You win!")
+            grid_positions.clear()
+            choice = input("Would you like to try again?\n")
+            lower_choice = choice.lower()
+            if lower_choice == "yes":
+                print("That's the spirit")
+                coin_toss_outcome()
+            elif lower_choice == "no":
+                data_choice = input("Would you like to see some stats?\n")
+                data_choice_lower = data_choice.lower()
+                if data_choice_lower == "yes":
+                    access_data()
+                elif data_choice_lower == "no":
+                    print("Okeley doke, thanks for playing!")
+        elif computer_stats == combo:
+            print("I surprise myself sometimes. I win!")
+            choice = input("Would you like to try again?\n")
+            lower_choice = choice.lower()
+            if lower_choice == "yes":
+                print("That's the spirit")
+                coin_toss_outcome()
+            elif lower_choice == "no":
+                data_choice = input("Would you like to see some stats?\n")
+                data_choice_lower = data_choice.lower()
+                if data_choice_lower == "yes":
+                    access_data()
+                elif data_choice_lower == "no":
+                    print("Okeley doke, thanks for playing!")
+
+
 def turn_order(first_go, player_sign, computer_sign):
     """
     Establishes whether user_turn or computer_turn
@@ -241,8 +306,9 @@ def user_turn(player_sign, computer_sign):
                 print(chosen_slots)
                 print_grid(grid)
                 print(grid_positions)
+                check_if_win()
                 computer_turn(computer_sign, player_sign)
-                return chosen_slots, player_choice
+                return chosen_slots, player_choice, grid_positions
             else:
                 print("Please select a number between 1 and 9.")
                 user_turn(player_sign, computer_sign)
@@ -254,6 +320,8 @@ def user_turn(player_sign, computer_sign):
 def computer_turn(computer_sign, player_sign):
     """
     Uses a random number to generate a random choice for the computer.
+    Checks whether the number has been used before, then updates the board
+    with the computer's choice.
     """
     computer_choice = round(random.randint(1, 9))
     print("My go- I think I'll go here...")
@@ -263,6 +331,7 @@ def computer_turn(computer_sign, player_sign):
     grid_positions['Computer'].append(computer_choice)
     print(chosen_slots)
     print_grid(grid)
+    check_if_win()
     user_turn(player_sign, computer_sign)
   
 
@@ -273,21 +342,6 @@ def access_data():
     """
     print("Accessing database...")
     print("Bear with me!")
-    Analysis = SHEET.worksheet('Analysis')
-    total_games = Analysis.get('D5').first()
-    user_wins = Analysis.get('D6').first()
-    computer_wins = Analysis.get('D7').first()
-    user_percentage = Analysis.get('D8').first()
-    computer_percentage = Analysis.get('D9').first()
-    heads_choice = Analysis.get('G5').first()
-    tails_choice = Analysis.get('G6').first()
-    heads_choice_percentage = Analysis.get('G7').first()
-    tails_choice_percentage = Analysis.get('G8').first()
-    heads_outcome = Analysis.get('J5').first()
-    tails_outcome = Analysis.get('J6').first()
-    heads_outcome_percentage = Analysis.get('J7').first()
-    tails_outcome_percentage = Analysis.get('J8').first()
-
     print("You have 3 choices: Games, Choices or Cancel")
     request = input("What stats would you like to see?\n") 
     capitalize_request = request.capitalize()
