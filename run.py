@@ -185,12 +185,27 @@ def print_grid(grid):
         print()
 
 
-def check_choice():
+def check_user_choice(player_choice, computer_sign, player_sign):
     """
     Checks whether user choice for placement is already
     taken or not.
     """
-    print(chosen_slots.copy())
+    player_values = grid_positions.get('Player')
+    if player_choice in player_values:
+        print("You've already chosen it! Try again.")
+        user_turn(player_sign, computer_sign)
+
+
+def check_computer_choice(computer_choice, computer_sign, player_sign):
+    """
+    Checks whether computer choice for placement is already
+    taken or not.
+    """
+    computer_values = grid_positions.get('Computer')
+    if computer_choice in computer_values:
+        print("I've already chosen that one...")
+        print("How forgetful of me!")
+        computer_turn(computer_sign, player_sign)
 
 
 def turn_order(first_go, player_sign, computer_sign):
@@ -203,7 +218,7 @@ def turn_order(first_go, player_sign, computer_sign):
     else:
         computer_turn(computer_sign, player_sign)
     return player_sign, computer_sign
-    
+
 
 def user_turn(player_sign, computer_sign):
     """
@@ -211,23 +226,29 @@ def user_turn(player_sign, computer_sign):
     is input then error message is printed. Updates chosen_slots array
     and grid with player choice.
     """
-    user_input = input("Make your move.. Choose between slots 1-9\n")
-    player_choice = int(user_input)
-    try:
-        if player_choice <= 9 and player_choice != 0:
-            chosen_slots.remove(player_choice)
-            chosen_slots.insert(player_choice - 1, player_sign)
-            grid_positions['Player'].append(player_choice)
-            print(chosen_slots)
-            print_grid(grid)
-            print(grid_positions)
-            check_choice()
-            computer_turn(computer_sign, player_sign)
-        else:
-            print("Please select a number between 1 and 9.")
+    user_input = input("Your go- Choose between slots 1-9 or q to quit\n")
+    if user_input == "q":
+        print("Okay... bye!")
+        return
+    else:
+        player_choice = int(user_input)
+        try:
+            if player_choice <= 9 and player_choice != 0:
+                check_user_choice(player_choice, computer_sign, player_sign)
+                chosen_slots.remove(player_choice)
+                chosen_slots.insert(player_choice - 1, player_sign)
+                grid_positions['Player'].append(player_choice)
+                print(chosen_slots)
+                print_grid(grid)
+                print(grid_positions)
+                computer_turn(computer_sign, player_sign)
+                return chosen_slots, player_choice
+            else:
+                print("Please select a number between 1 and 9.")
+                user_turn(player_sign, computer_sign)
+        except ValueError:
+            print("You need to choose an unused number!")
             user_turn(player_sign, computer_sign)
-    except ValueError:
-        print("You need to choose an unused number!")
 
 
 def computer_turn(computer_sign, player_sign):
@@ -236,6 +257,7 @@ def computer_turn(computer_sign, player_sign):
     """
     computer_choice = round(random.randint(1, 9))
     print("My go- I think I'll go here...")
+    check_computer_choice(computer_choice, computer_sign, player_sign)
     chosen_slots.remove(computer_choice)
     chosen_slots.insert(computer_choice - 1, computer_sign)
     grid_positions['Computer'].append(computer_choice)
