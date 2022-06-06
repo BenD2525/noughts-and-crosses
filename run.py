@@ -116,41 +116,64 @@ def coin_toss_outcome():
         capitalize_sign = sign_choice.capitalize()
         results.update('C' + str(next_free_row), coin_toss_result)
         results.update('D' + str(next_free_row), capitalize_sign)
-        if capitalize_sign == "Noughts":
-            print("You chose Noughts")
-            player_sign = "O"
-            computer_sign = "X"
-        elif capitalize_sign == "Crosses":
-            print("You chose Crosses")
-            player_sign = "X"
-            computer_sign = "O"
-        else:
-            print("You must choose 'Noughts' or 'Crosses'. Let's try again.")
-            sign_choice = input("Noughts or Crosses? \n")
-            capitalize_sign = sign_choice.capitalize()
+        assign_sign_player(capitalize_sign, first_go)
+        return first_go, capitalize_sign
     else:
         print("I win- binary is best!")
         first_go = False
         computer_choice = random_number()
         results.update('C' + str(next_free_row), coin_toss_result)
         results.update('D' + str(next_free_row), "-")
-        if computer_choice == 0:
-            computer_selection = "Noughts"
-            print(f"I think I'll pick {computer_selection}")
-            computer_sign = "O"
-            player_sign = "X"
-        elif computer_choice == 1:
-            computer_selection = "Crosses"
-            print(f"I'm going to pick {computer_selection}")
-            computer_sign = "X"
-            player_sign = "O"
-        else:
-            print("Uh oh! Error!")
-            coin_toss_outcome()
+        assign_sign_computer(computer_choice, first_go)
+        return first_go, computer_choice
+
+
+def assign_sign_player(capitalize_sign, first_go):
+    """
+    Takes player choice and assigns either noughts
+    or crosses.
+    """
+    if capitalize_sign == "Noughts":
+        print("You chose Noughts")
+        player_sign = "O"
+        computer_sign = "X"
+    elif capitalize_sign == "Crosses":
+        print("You chose Crosses")
+        player_sign = "X"
+        computer_sign = "O"
+    else:
+        print("You must choose 'Noughts' or 'Crosses'. Let's try again.")
+        sign_choice = input("Noughts or Crosses? \n")
+        capitalize_sign = sign_choice.capitalize()
     print(f"Player Sign: {player_sign}, Computer Sign: {computer_sign}")
-    turn_order(first_go)
-    return computer_sign, player_sign, first_go
-   
+    turn_order(first_go, player_sign, computer_sign)
+    
+    return player_sign, computer_sign, first_go
+
+
+def assign_sign_computer(computer_choice, first_go):
+    """
+    Takes computer choice and assigns either noughts
+    or crosses.
+    """
+    if computer_choice == 0:
+        computer_selection = "Noughts"
+        print(f"I think I'll pick {computer_selection}")
+        computer_sign = "O"
+        player_sign = "X"
+    elif computer_choice == 1:
+        computer_selection = "Crosses"
+        print(f"I'm going to pick {computer_selection}")
+        computer_sign = "X"
+        player_sign = "O"
+    else:
+        print("Uh oh! Error!")
+        coin_toss_outcome()
+    print(f"Player Sign: {player_sign}, Computer Sign: {computer_sign}")
+    turn_order(first_go, player_sign, computer_sign)
+    
+    return player_sign, computer_sign, first_go
+
 
 def print_grid(grid):
     """
@@ -170,18 +193,19 @@ def check_choice():
     print(chosen_slots.copy())
 
 
-def turn_order(first_go):
+def turn_order(first_go, player_sign, computer_sign):
     """
     Establishes whether user_turn or computer_turn
     is called first.
     """
     if first_go:
-        user_turn()
+        user_turn(player_sign, computer_sign)
     else:
-        computer_turn()
+        computer_turn(computer_sign, player_sign)
+    return player_sign, computer_sign
     
 
-def user_turn():
+def user_turn(player_sign, computer_sign):
     """
     Asks for user input for turn being taken. If a number greater than 9
     is input then error message is printed. Updates chosen_slots array
@@ -192,32 +216,32 @@ def user_turn():
     try:
         if player_choice <= 9 and player_choice != 0:
             chosen_slots.remove(player_choice)
-            chosen_slots.insert(player_choice - 1, "x")
+            chosen_slots.insert(player_choice - 1, player_sign)
             grid_positions['Player'].append(player_choice)
             print(chosen_slots)
             print_grid(grid)
             print(grid_positions)
             check_choice()
-            computer_turn()
+            computer_turn(computer_sign, player_sign)
         else:
             print("Please select a number between 1 and 9.")
-            user_turn()
+            user_turn(player_sign, computer_sign)
     except ValueError:
         print("You need to choose an unused number!")
 
 
-def computer_turn():
+def computer_turn(computer_sign, player_sign):
     """
     Uses a random number to generate a random choice for the computer.
     """
     computer_choice = round(random.randint(1, 9))
     print("My go- I think I'll go here...")
     chosen_slots.remove(computer_choice)
-    chosen_slots.insert(computer_choice - 1, "x")
+    chosen_slots.insert(computer_choice - 1, computer_sign)
     grid_positions['Computer'].append(computer_choice)
     print(chosen_slots)
     print_grid(grid)
-    user_turn()
+    user_turn(player_sign, computer_sign)
   
 
 def access_data():
