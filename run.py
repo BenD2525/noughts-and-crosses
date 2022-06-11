@@ -17,19 +17,6 @@ SHEET = GSPREAD_CLIENT.open('Noughts and Crosses')
 results = SHEET.worksheet('Results')
 next_free_row = len(results.get_all_values()) + 1
 Analysis = SHEET.worksheet('Analysis')
-total_games = Analysis.get('D5').first()
-user_wins = Analysis.get('D6').first()
-computer_wins = Analysis.get('D7').first()
-user_percentage = Analysis.get('D8').first()
-computer_percentage = Analysis.get('D9').first()
-heads_choice = Analysis.get('G5').first()
-tails_choice = Analysis.get('G6').first()
-heads_choice_percentage = Analysis.get('G7').first()
-tails_choice_percentage = Analysis.get('G8').first()
-heads_outcome = Analysis.get('J5').first()
-tails_outcome = Analysis.get('J6').first()
-heads_outcome_percentage = Analysis.get('J7').first()
-tails_outcome_percentage = Analysis.get('J8').first()
 
 chosen_slots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 grid = [
@@ -103,7 +90,7 @@ def coin_toss():
     else:
         print("There's a glitch in the matrix, let's try again.")
     return coin_toss_result
-  
+
 
 def coin_toss_choice():
     """
@@ -233,6 +220,33 @@ def check_computer_choice(computer_choice, computer_sign, player_sign):
         computer_turn(computer_sign, player_sign)
 
 
+def update_games():
+    """
+    Increments total game stat by 1 when called.
+    """
+    total_games = int(Analysis.get('D5').first())
+    total_games += 1
+    Analysis.update('D5', total_games)
+
+
+def update_user_wins():
+    """
+    Increments user win stat by 1 when called.
+    """
+    user_wins = int(Analysis.get('D6').first())
+    user_wins += 1
+    Analysis.update('D6', user_wins)
+
+
+def update_computer_wins():
+    """
+    Increments user win stat by 1 when called.
+    """
+    computer_wins = int(Analysis.get('D7').first())
+    computer_wins += 1
+    Analysis.update('D7', computer_wins)
+
+
 def check_if_win():
     """
     Checks if the user or the computer has won,
@@ -245,6 +259,8 @@ def check_if_win():
         if player_stats == combo:
             print("You win!")
             grid_positions.clear()
+            update_games()
+            update_user_wins()
             choice = input("Would you like to try again?\n")
             lower_choice = choice.lower()
             if lower_choice == "yes":
@@ -259,6 +275,8 @@ def check_if_win():
                     print("Okeley doke, thanks for playing!")
         elif computer_stats == combo:
             print("I surprise myself sometimes. I win!")
+            update_games()
+            update_computer_wins()
             choice = input("Would you like to try again?\n")
             lower_choice = choice.lower()
             if lower_choice == "yes":
@@ -269,8 +287,8 @@ def check_if_win():
                 data_choice_lower = data_choice.lower()
                 if data_choice_lower == "yes":
                     access_data()
-                elif data_choice_lower == "no":
-                    print("Okeley doke, thanks for playing!")
+                else:
+                    exit_game()
 
 
 def turn_order(first_go, player_sign, computer_sign):
@@ -285,6 +303,13 @@ def turn_order(first_go, player_sign, computer_sign):
     return player_sign, computer_sign
 
 
+def exit_game():
+    """
+    Prints a goodbye message and exits the game.
+    """
+    print("Okay, goodbye friend!")
+
+
 def user_turn(player_sign, computer_sign):
     """
     Asks for user input for turn being taken. If a number greater than 9
@@ -293,8 +318,7 @@ def user_turn(player_sign, computer_sign):
     """
     user_input = input("Your go- Choose between slots 1-9 or q to quit\n")
     if user_input == "q":
-        print("Okay... bye!")
-        return
+        exit_game()
     else:
         player_choice = int(user_input)
         try:
@@ -340,8 +364,22 @@ def access_data():
     Accesses the 'Analysis' tab in spreadsheet and prints
     detail to user.
     """
+ 
     print("Accessing database...")
-    print("Bear with me!")
+    print("This might take a second!")
+    total_games = Analysis.get('D5').first()
+    user_wins = Analysis.get('D6').first()
+    computer_wins = Analysis.get('D7').first()
+    user_percentage = Analysis.get('D8').first()
+    computer_percentage = Analysis.get('D9').first()
+    heads_choice = Analysis.get('G5').first()
+    tails_choice = Analysis.get('G6').first()
+    heads_choice_percentage = Analysis.get('G7').first()
+    tails_choice_percentage = Analysis.get('G8').first()
+    heads_outcome = Analysis.get('J5').first()
+    tails_outcome = Analysis.get('J6').first()
+    heads_outcome_percentage = Analysis.get('J7').first()
+    tails_outcome_percentage = Analysis.get('J8').first()
     print("You have 3 choices: Games, Choices or Cancel")
     request = input("What stats would you like to see?\n") 
     capitalize_request = request.capitalize()
@@ -366,10 +404,15 @@ def access_data():
     elif capitalize_request == "Cancel":
         print("Okay")
         return
+    else:
+        print("You need to input one of the above!")
+        access_data()
     user_choice = input("Anything else? Yes or No:\n")
     capitalize_choice = user_choice.capitalize()
     if capitalize_choice == "Yes":
         access_data()
+    else:
+        exit_game()
        
 
 def new_game():
