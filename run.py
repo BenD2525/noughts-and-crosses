@@ -28,6 +28,11 @@ grid_positions = {'Player': [], 'Computer': []}
 
 winning_combinations = [
     [1, 2, 3],
+    [3, 2, 1],
+    [1, 3, 2],
+    [3, 1, 2],
+    [2, 1, 3],
+    [2, 3, 1],
     [4, 5, 6],
     [7, 8, 9],
     [1, 4, 7],
@@ -247,6 +252,16 @@ def update_computer_wins():
     Analysis.update('D7', computer_wins)
 
 
+def clear_scores():
+    """
+    Resets chosen slots and clears dictionary
+    for a new game and returns an empty version.
+    """
+    chosen_slots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    grid_positions = {'Player': [], 'Computer': []}
+    return chosen_slots, grid_positions
+
+
 def check_if_win():
     """
     Checks if the user or the computer has won,
@@ -256,7 +271,7 @@ def check_if_win():
     player_stats = grid_positions.get('Player')
     computer_stats = grid_positions.get('Computer')
     for combo in winning_combinations:
-        if player_stats == combo:
+        if combo == player_stats:
             print("You win!")
             grid_positions.clear()
             update_games()
@@ -265,6 +280,7 @@ def check_if_win():
             lower_choice = choice.lower()
             if lower_choice == "yes":
                 print("That's the spirit")
+                clear_scores()
                 coin_toss_outcome()
             elif lower_choice == "no":
                 data_choice = input("Would you like to see some stats?\n")
@@ -273,7 +289,7 @@ def check_if_win():
                     access_data()
                 elif data_choice_lower == "no":
                     print("Okeley doke, thanks for playing!")
-        elif computer_stats == combo:
+        elif combo == computer_stats:
             print("I surprise myself sometimes. I win!")
             update_games()
             update_computer_wins()
@@ -281,6 +297,7 @@ def check_if_win():
             lower_choice = choice.lower()
             if lower_choice == "yes":
                 print("That's the spirit")
+                clear_scores()
                 coin_toss_outcome()
             elif lower_choice == "no":
                 data_choice = input("Would you like to see some stats?\n")
