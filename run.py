@@ -283,13 +283,13 @@ def exit_game():
     Prints a goodbye message and exits the game.
     """
     print("Okay, goodbye friend!")
+    quit()
 
 
 def end_game():
     """
     Ends game and updates stats when called.
     """
-    grid_positions.clear()
     update_games()
     check_try_again()
 
