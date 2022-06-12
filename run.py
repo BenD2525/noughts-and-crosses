@@ -261,39 +261,12 @@ def check_if_win():
     for combo in winning_combinations:
         if combo == player_stats:
             print("You win!")
-            grid_positions.clear()
-            update_games()
             update_user_wins()
-            choice = input("Would you like to try again?\n")
-            lower_choice = choice.lower()
-            if lower_choice == "yes":
-                print("That's the spirit")
-                clear_scores()
-                coin_toss_outcome()
-            elif lower_choice == "no":
-                data_choice = input("Would you like to see some stats?\n")
-                data_choice_lower = data_choice.lower()
-                if data_choice_lower == "yes":
-                    access_data()
-                elif data_choice_lower == "no":
-                    print("Okeley doke, thanks for playing!")
+            end_game()
         elif combo == computer_stats:
             print("I surprise myself sometimes. I win!")
-            update_games()
             update_computer_wins()
-            choice = input("Would you like to try again?\n")
-            lower_choice = choice.lower()
-            if lower_choice == "yes":
-                print("That's the spirit")
-                clear_scores()
-                coin_toss_outcome()
-            elif lower_choice == "no":
-                data_choice = input("Would you like to see some stats?\n")
-                data_choice_lower = data_choice.lower()
-                if data_choice_lower == "yes":
-                    access_data()
-                else:
-                    exit_game()
+            end_game()
 
 
 def turn_order(first_go, player_sign, computer_sign):
@@ -315,6 +288,15 @@ def exit_game():
     print("Okay, goodbye friend!")
 
 
+def end_game():
+    """
+    Ends game and updates stats when called.
+    """
+    grid_positions.clear()
+    update_games()
+    check_try_again()
+
+
 def user_turn(player_sign, computer_sign):
     """
     Asks for user input for turn being taken. If a number greater than 9
@@ -324,8 +306,12 @@ def user_turn(player_sign, computer_sign):
     check_remaining_slots(chosen_slots)
     print("Press q to quit if you want to!")
     user_input = input(f"Pick any of {check_remaining_slots(chosen_slots)}\n")
+    is_integer = user_input.isnumeric()
     if user_input == "q":
         exit_game()
+    elif user_input != "q" and not is_integer:
+        print("Please use a valid choice!")
+        user_turn(player_sign, computer_sign)
     else:
         player_choice = int(user_input)
         try:
@@ -356,8 +342,32 @@ def check_remaining_slots(chosen_slots):
     for slot in chosen_slots:
         if isinstance(slot, int):
             updated_chosen_slots.append(slot)
+    if len(updated_chosen_slots) == 0:
+        print("It's a draw!")
+        end_game()
+
     return updated_chosen_slots
        
+
+def check_try_again():
+    """ 
+    Checks if user wants to try again. Starts another game,
+    accesses data or exits game based on input.
+    """
+    choice = input("Would you like to try again?\n")
+    lower_choice = choice.lower()
+    if lower_choice == "yes":
+        print("That's the spirit")
+        clear_scores()
+        coin_toss_outcome()
+    elif lower_choice == "no":
+        data_choice = input("Would you like to see some stats?\n")
+        data_choice_lower = data_choice.lower()
+        if data_choice_lower == "yes":
+            access_data()
+        else:
+            exit_game()
+
 
 def computer_turn(computer_sign, player_sign):
     """
