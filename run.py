@@ -213,18 +213,6 @@ def check_user_choice(player_choice, computer_sign, player_sign):
         user_turn(player_sign, computer_sign)
 
 
-def check_computer_choice(computer_choice, computer_sign, player_sign):
-    """
-    Checks whether computer choice for placement is already
-    taken or not.
-    """
-    computer_values = grid_positions.get('Computer')
-    if computer_choice in computer_values:
-        print("I've already chosen that one...")
-        print("How forgetful of me!")
-        computer_turn(computer_sign, player_sign)
-
-
 def update_games():
     """
     Increments total game stat by 1 when called.
@@ -333,13 +321,15 @@ def user_turn(player_sign, computer_sign):
     is input then error message is printed. Updates chosen_slots array
     and grid with player choice.
     """
-    user_input = input("Your go- Choose between slots 1-9 or q to quit\n")
+    check_remaining_slots(chosen_slots)
+    print("Press q to quit if you want to!")
+    user_input = input(f"Pick any of {check_remaining_slots(chosen_slots)}\n")
     if user_input == "q":
         exit_game()
     else:
         player_choice = int(user_input)
         try:
-            if player_choice <= 9 and player_choice != 0:
+            if player_choice in check_remaining_slots(chosen_slots):
                 check_user_choice(player_choice, computer_sign, player_sign)
                 chosen_slots.remove(player_choice)
                 chosen_slots.insert(player_choice - 1, player_sign)
@@ -351,12 +341,23 @@ def user_turn(player_sign, computer_sign):
                 computer_turn(computer_sign, player_sign)
                 return chosen_slots, player_choice, grid_positions
             else:
-                print("Please select a number between 1 and 9.")
+                print("Please use a valid choice!")
                 user_turn(player_sign, computer_sign)
         except ValueError:
-            print("You need to choose an unused number!")
+            print("Please use a valid choice!")
             user_turn(player_sign, computer_sign)
 
+
+def check_remaining_slots(chosen_slots):
+    """
+    Creates a list to select from when playing a turn.
+    """
+    updated_chosen_slots = []
+    for slot in chosen_slots:
+        if isinstance(slot, int):
+            updated_chosen_slots.append(slot)
+    return updated_chosen_slots
+       
 
 def computer_turn(computer_sign, player_sign):
     """
@@ -364,9 +365,8 @@ def computer_turn(computer_sign, player_sign):
     Checks whether the number has been used before, then updates the board
     with the computer's choice.
     """
-    computer_choice = round(random.randint(1, 9))
+    computer_choice = random.choice(check_remaining_slots(chosen_slots))
     print("My go- I think I'll go here...")
-    check_computer_choice(computer_choice, computer_sign, player_sign)
     chosen_slots.remove(computer_choice)
     chosen_slots.insert(computer_choice - 1, computer_sign)
     grid_positions['Computer'].append(computer_choice)
@@ -374,6 +374,7 @@ def computer_turn(computer_sign, player_sign):
     print_grid(grid)
     check_if_win()
     user_turn(player_sign, computer_sign)
+    return chosen_slots
   
 
 def access_data():
