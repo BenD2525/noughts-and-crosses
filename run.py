@@ -28,11 +28,6 @@ grid_positions = {'Player': [], 'Computer': []}
 
 winning_combinations = [
     [1, 2, 3],
-    [3, 2, 1],
-    [1, 3, 2],
-    [3, 1, 2],
-    [2, 1, 3],
-    [2, 3, 1],
     [4, 5, 6],
     [7, 8, 9],
     [1, 4, 7],
@@ -192,7 +187,7 @@ def assign_sign_computer(computer_choice, first_go):
     return player_sign, computer_sign, first_go
 
 
-def print_grid(grid):
+def print_grid(chosen_slots):
     """
     Prints grid using the chosen_slots list.
     """
@@ -258,12 +253,12 @@ def check_if_win():
     """
     player_stats = grid_positions.get('Player')
     computer_stats = grid_positions.get('Computer')
-    for combo in winning_combinations:
-        if combo == player_stats:
+    for combo in winning_combinations:      
+        if all(num in player_stats for num in combo):
             print("You win!")
             update_user_wins()
             end_game()
-        elif combo == computer_stats:
+        elif all(num in computer_stats for num in combo):
             print("I surprise myself sometimes. I win!")
             update_computer_wins()
             end_game()
@@ -317,11 +312,10 @@ def user_turn(player_sign, computer_sign):
         try:
             if player_choice in check_remaining_slots(chosen_slots):
                 check_user_choice(player_choice, computer_sign, player_sign)
-                chosen_slots.remove(player_choice)
-                chosen_slots.insert(player_choice - 1, player_sign)
+                chosen_slots[player_choice - 1] = player_sign
                 grid_positions['Player'].append(player_choice)
                 print(chosen_slots)
-                print_grid(grid)
+                print_grid(chosen_slots)
                 print(grid_positions)
                 check_if_win()
                 computer_turn(computer_sign, player_sign)
@@ -347,7 +341,7 @@ def check_remaining_slots(chosen_slots):
         end_game()
 
     return updated_chosen_slots
-       
+
 
 def check_try_again():
     """ 
@@ -377,8 +371,7 @@ def computer_turn(computer_sign, player_sign):
     """
     computer_choice = random.choice(check_remaining_slots(chosen_slots))
     print("My go- I think I'll go here...")
-    chosen_slots.remove(computer_choice)
-    chosen_slots.insert(computer_choice - 1, computer_sign)
+    chosen_slots[computer_choice - 1] = computer_sign
     grid_positions['Computer'].append(computer_choice)
     print(chosen_slots)
     print_grid(grid)
