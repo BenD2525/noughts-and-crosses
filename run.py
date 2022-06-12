@@ -240,7 +240,9 @@ def clear_scores():
     Resets chosen slots and clears dictionary
     for a new game and returns an empty version.
     """
+    global chosen_slots
     chosen_slots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    global grid_positions
     grid_positions = {'Player': [], 'Computer': []}
     return chosen_slots, grid_positions
 
@@ -359,7 +361,7 @@ def check_try_again():
         data_choice_lower = data_choice.lower()
         if data_choice_lower == "yes":
             access_data()
-        else:
+        elif data_choice_lower == "no":
             exit_game()
 
 
