@@ -13,11 +13,10 @@ CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('Noughts and Crosses')
-
 results = SHEET.worksheet('Results')
-next_free_row = len(results.get_all_values()) + 1
+next_free_row = len(results.get_values()) + 1
 Analysis = SHEET.worksheet('Analysis')
-
+multiple_games = False
 chosen_slots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 grid = [
         [chosen_slots[0], chosen_slots[1], chosen_slots[2]],
@@ -46,23 +45,36 @@ def time_delay():
     time.sleep(num_seconds)
 
 
+def find_next_row():
+    """
+    Used to generate the next row on gspread
+    when playing multiple rounds.
+    """    
+    next_free_row = len(results.get_values()) + 1
+    return next_free_row
+
+
 def welcome_message():
     """
     Prints welcome message to user, explains the game
     and requests a username.
     """
     print("Welcome to Noughts and Crosses!")
+    print("----------")
     time_delay()
     print("Also called 'Tic Tac Toe', try and beat me (your computer) ")
-    print("in a best of 5 games where the goal is to join")
-    print("up to 3 noughts or crosses together before me!")
+    print("by joining up to 3 noughts or crosses together before me!")
     time_delay()
     username = input("Now, who am I talking to? ")
     print(f"Pleased to meet you {username}.")
     time_delay()
     print("Nice to know the name of the person I'll beat!")
     time_delay()
-    results.update('A' + str(next_free_row), username)
+    if multiple_games:
+        results.update('A' + str(find_next_row()), username)
+    else:
+        results.update('A' + str(next_free_row), username)
+    coin_toss_outcome()
 
 
 def random_number():
@@ -107,10 +119,16 @@ def coin_toss_choice():
     capitalize_choice = choice.capitalize()
     if capitalize_choice == "Heads":
         print("Heads it is")
-        results.update('B' + str(next_free_row), capitalize_choice)
+        if multiple_games:
+            results.update('B' + str(find_next_row() - 1), capitalize_choice)
+        else:
+            results.update('B' + str(next_free_row), capitalize_choice)
     elif capitalize_choice == "Tails":
         print("Tails it is")
-        results.update('B' + str(next_free_row), capitalize_choice)
+        if multiple_games:
+            results.update('B' + str(find_next_row() - 1), capitalize_choice)
+        else:
+            results.update('B' + str(next_free_row), capitalize_choice)
     else:
         print("You need to choose 'Heads' or 'Tails'. Let's try again.")
         coin_toss_choice()   
@@ -131,8 +149,12 @@ def coin_toss_outcome():
         first_go = True
         sign_choice = input("Noughts or Crosses? \n")
         capitalize_sign = sign_choice.capitalize()
-        results.update('C' + str(next_free_row), coin_toss_result)
-        results.update('D' + str(next_free_row), capitalize_sign)
+        if multiple_games:
+            results.update('C' + str(find_next_row() - 1), coin_toss_result)
+            results.update('D' + str(find_next_row() - 1), capitalize_sign)
+        else:
+            results.update('C' + str(next_free_row), coin_toss_result)
+            results.update('D' + str(next_free_row), capitalize_sign)
         assign_sign_player(capitalize_sign, first_go)
         return first_go, capitalize_sign
     else:
@@ -140,8 +162,12 @@ def coin_toss_outcome():
         time_delay()
         first_go = False
         computer_choice = random_number()
-        results.update('C' + str(next_free_row), coin_toss_result)
-        results.update('D' + str(next_free_row), "-")
+        if multiple_games:
+            results.update('C' + str(find_next_row() - 1), coin_toss_result)
+            results.update('D' + str(find_next_row() - 1), "-")
+        else:
+            results.update('C' + str(next_free_row), coin_toss_result)
+            results.update('D' + str(next_free_row), "-")
         assign_sign_computer(computer_choice, first_go)
         return first_go, computer_choice
 
@@ -165,7 +191,6 @@ def assign_sign_player(capitalize_sign, first_go):
         capitalize_sign = sign_choice.capitalize()
     print(f"Player Sign: {player_sign}, Computer Sign: {computer_sign}")
     turn_order(first_go, player_sign, computer_sign)
-    
     return player_sign, computer_sign, first_go
 
 
@@ -187,13 +212,15 @@ def assign_sign_computer(computer_choice, first_go):
     else:
         print("Uh oh! Error!")
         coin_toss_outcome()
+    print("----------")
     print(f"Player Sign: {player_sign}, Computer Sign: {computer_sign}")
+    print("----------")
     turn_order(first_go, player_sign, computer_sign)
     
     return player_sign, computer_sign, first_go
 
 
-def print_grid(chosen_slots):
+def print_grid():
     """
     Prints grid using the chosen_slots list.
     """
@@ -338,9 +365,7 @@ def user_turn(player_sign, computer_sign):
                 chosen_slots[player_choice - 1] = player_sign
                 update_grid()
                 grid_positions['Player'].append(player_choice)
-                print(chosen_slots)
-                print_grid(chosen_slots)
-                print(grid_positions)
+                print_grid()
                 check_if_win()
                 computer_turn(computer_sign, player_sign)
                 return chosen_slots, player_choice, grid_positions
@@ -367,6 +392,16 @@ def check_remaining_slots(chosen_slots):
     return updated_chosen_slots
 
 
+def is_next_game():
+    """
+    Changes multiple_games variable to True and returns value.
+    Used for multiple round games.
+    """
+    global multiple_games
+    multiple_games = True
+    return multiple_games
+
+
 def check_try_again():
     """ 
     Checks if user wants to try again. Starts another game,
@@ -375,9 +410,13 @@ def check_try_again():
     choice = input("Would you like to try again?\n")
     lower_choice = choice.lower()
     if lower_choice == "yes":
-        print("That's the spirit")
+        print("That's the spirit!")
+        print("Let me do my spiel again :)")
+        print("You can even change your name if you want!")
+        print("----------")
         clear_scores()
-        coin_toss_outcome()
+        is_next_game()
+        welcome_message()
     elif lower_choice == "no":
         data_choice = input("Would you like to see some stats?\n")
         data_choice_lower = data_choice.lower()
@@ -386,10 +425,10 @@ def check_try_again():
         elif data_choice_lower == "no":
             exit_game()
         else:
-            print("Please use a valid choice!")
+            print("Yes or No only please, no fancy answers here!")
             check_try_again()
     else:
-        print("Please use a valid choice!")
+        print("Yes or No only please, no fancy answers here!")
         check_try_again()
 
 
@@ -404,9 +443,8 @@ def computer_turn(computer_sign, player_sign):
     chosen_slots[computer_choice - 1] = computer_sign
     grid_positions['Computer'].append(computer_choice)
     time_delay()
-    print(chosen_slots)
     update_grid()
-    print_grid(grid)
+    print_grid()
     check_if_win()
     user_turn(player_sign, computer_sign)
     return chosen_slots
@@ -480,16 +518,18 @@ def access_data():
     capitalize_choice = user_choice.capitalize()
     if capitalize_choice == "Yes":
         access_data()
-    else:
+    elif capitalize_choice == "No":
         exit_game()
-       
+    else:
+        print("Yes or No only please, no fancy answers here!")
+        access_data()
+
 
 def new_game():
     """
-    Initiates the game and contains other functions.
+    Initiates the first function and thus a new game.
     """
     welcome_message()
-    coin_toss_outcome()
 
 
-coin_toss_outcome()
+new_game()
