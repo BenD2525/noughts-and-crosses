@@ -38,24 +38,30 @@ winning_combinations = [
 ]
 
 
+def time_delay():
+    """
+    Sleeps the console for one second.
+    """
+    num_seconds = 1
+    time.sleep(num_seconds)
+
+
 def welcome_message():
     """
     Prints welcome message to user, explains the game
     and requests a username.
     """
     print("Welcome to Noughts and Crosses!")
-    num_seconds = 1
-    time.sleep(num_seconds)
+    time_delay()
     print("Also called 'Tic Tac Toe', try and beat me (your computer) ")
     print("in a best of 5 games where the goal is to join")
     print("up to 3 noughts or crosses together before me!")
-    num_seconds += 1
-    time.sleep(num_seconds)
+    time_delay()
     username = input("Now, who am I talking to? ")
     print(f"Pleased to meet you {username}.")
-    time.sleep(num_seconds)
+    time_delay()
     print("Nice to know the name of the person I'll beat!")
-    time.sleep(num_seconds)
+    time_delay()
     results.update('A' + str(next_free_row), username)
 
 
@@ -78,14 +84,12 @@ def coin_toss():
     if result == 0:
         coin_toss_result = "Heads"
         print("The computer flicks the coin up...")
-        num_seconds = 1
-        time.sleep(num_seconds)
+        time_delay()
         print(f"It's {coin_toss_result}")
     elif result == 1:
         coin_toss_result = "Tails"
         print("The computer flicks the coin up...")
-        num_seconds = 1
-        time.sleep(num_seconds)
+        time_delay()
         print(f"It's {coin_toss_result}")
     else:
         print("There's a glitch in the matrix, let's try again.")
@@ -123,6 +127,7 @@ def coin_toss_outcome():
     coin_toss_result = coin_toss()
     if capitalize_choice == coin_toss_result:
         print("You win- lucky guess...")
+        time_delay()
         first_go = True
         sign_choice = input("Noughts or Crosses? \n")
         capitalize_sign = sign_choice.capitalize()
@@ -132,6 +137,7 @@ def coin_toss_outcome():
         return first_go, capitalize_sign
     else:
         print("I win- binary is best!")
+        time_delay()
         first_go = False
         computer_choice = random_number()
         results.update('C' + str(next_free_row), coin_toss_result)
@@ -191,10 +197,12 @@ def print_grid(chosen_slots):
     """
     Prints grid using the chosen_slots list.
     """
+    print("----------")
     for row in grid:
         for slot in row:
             print("|"f"{slot}", end="|")
         print()
+    print("----------")
 
 
 def check_user_choice(player_choice, computer_sign, player_sign):
@@ -363,6 +371,12 @@ def check_try_again():
             access_data()
         elif data_choice_lower == "no":
             exit_game()
+        else:
+            print("Please use a valid choice!")
+            check_try_again()
+    else:
+        print("Please use a valid choice!")
+        check_try_again()
 
 
 def computer_turn(computer_sign, player_sign):
@@ -375,6 +389,7 @@ def computer_turn(computer_sign, player_sign):
     print("My go- I think I'll go here...")
     chosen_slots[computer_choice - 1] = computer_sign
     grid_positions['Computer'].append(computer_choice)
+    time_delay()
     print(chosen_slots)
     print_grid(grid)
     check_if_win()
@@ -403,30 +418,46 @@ def access_data():
     tails_outcome = Analysis.get('J6').first()
     heads_outcome_percentage = Analysis.get('J7').first()
     tails_outcome_percentage = Analysis.get('J8').first()
+    print("----------")
     print("You have 3 choices: Games, Choices or Cancel")
+    print("----------")
     request = input("What stats would you like to see?\n") 
     capitalize_request = request.capitalize()
     if capitalize_request == "Games":
         print("Okay, let's have a look!")
+        print("----------")
         print(f"You've played {total_games} games.")
+        print("----------")
+        time_delay()
         print(f"You've won {user_wins} times.")
         print(f"I've won {computer_wins} times.")
+        print("----------")
+        time_delay()
         print(f"You've got a {user_percentage}% win percentage.")
         print(f"I've got a {computer_percentage}% win percentage.")
+        print("----------")
     elif capitalize_request == "Choices":
         print("Interested in your choices? Let me see!")
         print("Here we go:")
+        print("----------")
         print(f"You've chosen heads {heads_choice} times.")
         print(f"This is {heads_choice_percentage}% of the time.")
+        print("----------")
+        time_delay()
         print(f"You've chosen tails {tails_choice} times.")
         print(f"This is {tails_choice_percentage}% of the time.")
+        print("----------")
+        time_delay()
         print(f"The coin landed on heads {heads_outcome} times.")
         print(f"This is {heads_outcome_percentage}% of the time.")
+        print("----------")
+        time_delay()
         print(f"The coin landed on tails {tails_outcome} times.")
         print(f"This is {tails_outcome_percentage}% of the time.")
+        print("----------")
     elif capitalize_request == "Cancel":
         print("Okay")
-        return
+        exit_game()
     else:
         print("You need to input one of the above!")
         access_data()
