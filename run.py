@@ -302,6 +302,19 @@ def end_game():
     check_try_again()
 
 
+def update_grid():
+    """
+    Updates grid with the relevant player_signs from the chosen_slots list.
+    """
+    global grid
+    grid = [
+        [chosen_slots[0], chosen_slots[1], chosen_slots[2]],
+        [chosen_slots[3], chosen_slots[4], chosen_slots[5]],
+        [chosen_slots[6], chosen_slots[7], chosen_slots[8]]
+    ]
+    return grid
+
+
 def user_turn(player_sign, computer_sign):
     """
     Asks for user input for turn being taken. If a number greater than 9
@@ -323,6 +336,7 @@ def user_turn(player_sign, computer_sign):
             if player_choice in check_remaining_slots(chosen_slots):
                 check_user_choice(player_choice, computer_sign, player_sign)
                 chosen_slots[player_choice - 1] = player_sign
+                update_grid()
                 grid_positions['Player'].append(player_choice)
                 print(chosen_slots)
                 print_grid(chosen_slots)
@@ -391,6 +405,7 @@ def computer_turn(computer_sign, player_sign):
     grid_positions['Computer'].append(computer_choice)
     time_delay()
     print(chosen_slots)
+    update_grid()
     print_grid(grid)
     check_if_win()
     user_turn(player_sign, computer_sign)
