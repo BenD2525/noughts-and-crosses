@@ -49,7 +49,7 @@ def find_next_row():
     """
     Used to generate the next row on gspread
     when playing multiple rounds.
-    """    
+    """
     next_free_row = len(results.get_values()) + 1
     return next_free_row
 
@@ -131,7 +131,7 @@ def coin_toss_choice():
             results.update('B' + str(next_free_row), capitalize_choice)
     else:
         print("You need to choose 'Heads' or 'Tails'. Let's try again.")
-        coin_toss_choice()   
+        coin_toss_choice()
     return capitalize_choice
 
 
@@ -216,7 +216,6 @@ def assign_sign_computer(computer_choice, first_go):
     print(f"Player Sign: {player_sign}, Computer Sign: {computer_sign}")
     print("----------")
     turn_order(first_go, player_sign, computer_sign)
-    
     return player_sign, computer_sign, first_go
 
 
@@ -290,7 +289,7 @@ def check_if_win():
     """
     player_stats = grid_positions.get('Player')
     computer_stats = grid_positions.get('Computer')
-    for combo in winning_combinations:      
+    for combo in winning_combinations:
         if all(num in player_stats for num in combo):
             print("You win!")
             update_user_wins()
@@ -403,7 +402,7 @@ def is_next_game():
 
 
 def check_try_again():
-    """ 
+    """
     Checks if user wants to try again. Starts another game,
     accesses data or exits game based on input.
     """
@@ -448,14 +447,13 @@ def computer_turn(computer_sign, player_sign):
     check_if_win()
     user_turn(player_sign, computer_sign)
     return chosen_slots
-  
+
 
 def access_data():
     """
     Accesses the 'Analysis' tab in spreadsheet and prints
     detail to user.
     """
- 
     print("Accessing database...")
     print("This might take a second!")
     total_games = Analysis.get('D5').first()
@@ -474,7 +472,7 @@ def access_data():
     print("----------")
     print("You have 3 choices: Games, Choices or Cancel")
     print("----------")
-    request = input("What stats would you like to see?\n") 
+    request = input("What stats would you like to see?\n")
     capitalize_request = request.capitalize()
     if capitalize_request == "Games":
         print("Okay, let's have a look!")
