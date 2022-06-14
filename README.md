@@ -5,6 +5,11 @@ Users can log a username, take part in a coin toss and play as many games of Nou
 
 LINK TO DEPLOYED PROJECT
 
+## Planning
+I originally sketched out a list of functions I wanted the program to perform and organised them into a flowchart using Lucid Chart.
+Some have changed since the planning stage, but I feel it's important to look back on what I planned compared to what I produced.
+[See here for my chart](/workspace/noughts-and-crosses/documentation/Noughts_and_Crosses_Lucid_Chart.pdf)
+
 ## How to Play
 Noughts and Crosses is a classic game that can be played across many forms.
 
@@ -54,7 +59,7 @@ I have tested this project by doing the following:
 - No bugs remaining
 
 ### Validator Testing
-- No errors were return from PEP8
+- No errors were returned from PEP8
 
 ## Deployment
 This project was deployed using Code Institute's mcok terminal for Heroku.
