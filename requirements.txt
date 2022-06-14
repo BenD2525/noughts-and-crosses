@@ -1,1 +1,1 @@
-pip install gspread
+pip3 install gspread
