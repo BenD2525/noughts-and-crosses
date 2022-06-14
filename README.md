@@ -20,14 +20,14 @@ The game then begins and the user selects the slots they wish to choose, aiming 
 ## Features
 
 ### Existing Features
-- Welcome message
-- Random coin toss generation
-- Printing of board with updated X and O choices
-- Determination of winner or draw
-- Ability to play more than once
-- Input validation for each input request
-- Storing of username, coin toss choice/result and game results.
-- Access to the above information when the user requests it.
+- Welcome message [Screenshot](documentation/welcome_message.PNG)
+- Random coin toss generation [Screenshot](documentation/coin_toss.PNG)
+- Printing of board with updated X and O choices [Screenshot](documentation/print_board.PNG)
+- Determination of winner or draw [Screenshot](documentation/determine_winner.PNG)
+- Ability to play more than once [Screenshot](documentation/try_again.PNG)
+- Input validation for each input request [Screenshot](documentation/input_validation.PNG)
+- Storing of username, coin toss choice/result and game results. [Screenshot](documentation/store_data.PNG)
+- Access to the above information when the user requests it. [Screenshot](documentation/access_stats.PNG)
 
 ### Future Features
 - Add colours to computer/user selections on board
