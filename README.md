@@ -1,7 +1,10 @@
 # Noughts and Crosses
 Noughts and Crosses is a Python terminal game which runs in Heroku.
 
+The rationale for this project was to create a fun game for the user, which could store the scores and coin toss data. This data could provide an insight as to whether heads or tails are more popular, or noughts or crosses are more popular.
+
 Users can log a username, take part in a coin toss and play as many games of Noughts and Crosses (also known as Tic Tac Toe) as they want. Their username, coin toss choice, coin toss result, choice of Noughts or Crosses and game results are logged to an external spreadsheet. This can be accessed after playing a game if the user would like to know what their stats are.
+
 
 LINK TO DEPLOYED PROJECT
 
