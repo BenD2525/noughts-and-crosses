@@ -6,7 +6,7 @@ The rationale for this project was to create a fun game for the user, which coul
 Users can log a username, take part in a coin toss and play as many games of Noughts and Crosses (also known as Tic Tac Toe) as they want. Their username, coin toss choice, coin toss result, choice of Noughts or Crosses and game results are logged to an external spreadsheet. This can be accessed after playing a game if the user would like to know what their stats are.
 
 
-LINK TO DEPLOYED PROJECT
+[Click here to see the deployed project](https://noughts-and-crosses-25.herokuapp.com/)
 
 ## Planning
 I originally sketched out a list of functions I wanted the program to perform and organised them into a flowchart using Lucid Chart.
