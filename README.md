@@ -40,7 +40,7 @@ I used a dictionary as my data structure for this game.
 
 The dictionary begins empty and logs each of the user and computer's moves. The moves are selected using the keys 1-9, and if a slot has been taken it is removed from selection for the player on the next turn.
 
-In order to calculate the result of the game during both the computer and user turns, the check_if_win function compares the current 'Player' and 'Computer' key values against the list of winning combinations stored in global scope. If there is a match, the relevant win message and subsequent functions are stored.
+In order to calculate the result of the game during both the computer and user turns, the check_if_win function compares the current 'Player' and 'Computer' key values against the list of winning combinations stored in global scope. If there is a match, the relevant win message is displayed and subsequent functions are called.
 
 If there are no available slots and there is no winner, the game will be counted as a draw.
 
@@ -50,6 +50,7 @@ I have tested this project by doing the following:
 - Passed the code through PEP8 and confirmed that there were no problems
 - Tested input validation (tried input which wasn't requested by the program) and confirmed that no errors were thrown
 - Tested in my local terminal and on Heroku
+- Ad-hoc testing was performed while creating the application within Gitpod
 
 ## Bugs
 ### Solved Bugs
@@ -59,15 +60,15 @@ I have tested this project by doing the following:
 - The exit_game function was not correctly exiting the game and was allowing the game loop to continue after the function had been called, so I added quit() to the function.
 
 ### Remaining Bugs
-- No bugs remaining
+- No known bugs remaining
 
 ### Validator Testing
 - No errors were returned from PEP8
 
 ## Deployment
-This project was deployed using Code Institute's mcok terminal for Heroku.
+This project was deployed using Code Institute's mock terminal for Heroku.
 
-Stephs to deploy:
+Steps to deploy:
 - Fork or clone this repository
 - Create a new Heroku app
 - Set the buildbacks to Python and NodeJS in that order
